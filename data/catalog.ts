@@ -1,29 +1,15 @@
 export const PACKAGING_WEIGHT_KG = 0.3;
 
 // =========================================================
-// TRANSPORT PRICING
+// TRANSPORT
 // =========================================================
-//
+
 // 5 kg = $29
-// Each additional started kilogram = +$6
-//
-// Transport is calculated using PRODUCT weight only.
+// Each additional started kg = +$6
 // Packaging weight is NOT included in transport calculation.
-//
-// Examples:
-// 5 kg  = $29
-// 6 kg  = $35
-// 7 kg  = $41
-// 8 kg  = $47
-// 9 kg  = $53
-// 10 kg = $59
-// 15 kg = $89
-//
 
 export const TRANSPORT_BASE_WEIGHT_KG = 5;
-
 export const TRANSPORT_BASE_USD = 29;
-
 export const TRANSPORT_EXTRA_USD_PER_KG = 6;
 
 export function calculateTransportUsd(
@@ -35,53 +21,46 @@ export function calculateTransportUsd(
 
   const billableWeight = Math.max(
     TRANSPORT_BASE_WEIGHT_KG,
-    Math.ceil(
-      productWeightKg - 0.000001
-    )
+    Math.ceil(productWeightKg - 0.000001)
   );
 
   return (
     TRANSPORT_BASE_USD +
     Math.max(
       0,
-      billableWeight -
-        TRANSPORT_BASE_WEIGHT_KG
+      billableWeight - TRANSPORT_BASE_WEIGHT_KG
     ) *
       TRANSPORT_EXTRA_USD_PER_KG
   );
 }
 
 // =========================================================
-// CATEGORY TYPES
+// CATEGORIES
 // =========================================================
-//
-// Categories are intentionally NOT hard-coded.
-//
-// They are derived from the live Google Sheet catalog so
-// the Abroad storefront stays aligned with the catalog
-// without maintaining another category list in code.
-//
 
 export type CategoryKey = string;
 
 export type Category = {
   key: CategoryKey;
-
   name: string;
-
   kicker: string;
-
   description: string;
-
   image: string;
-
   accent?: string;
-
   subcategories?: string[];
 };
 
 // =========================================================
-// BUNDLE TYPE
+// CATALOG TYPE
+// =========================================================
+
+export type CatalogType =
+  | "product"
+  | "bundle"
+  | "combo";
+
+// =========================================================
+// BUNDLE / CATALOG ITEM
 // =========================================================
 
 export type Bundle = {
@@ -111,9 +90,7 @@ export type Bundle = {
 
   popular?: boolean;
 
-  catalogType?:
-    | "bundle"
-    | "combo";
+  catalogType?: CatalogType;
 };
 
 // =========================================================
@@ -124,58 +101,32 @@ export const boxSizes = [
   {
     kg: 5,
     name: "Personal",
-    description:
-      "A compact box of favourites",
+    description: "A compact box of favourites",
   },
 
   {
     kg: 10,
     name: "Family",
-    description:
-      "A fuller mix for home",
+    description: "A fuller mix for home",
     popular: true,
   },
 
   {
     kg: 15,
     name: "Stock Up",
-    description:
-      "More of what you miss",
+    description: "More of what you miss",
   },
 
   {
     kg: 20,
     name: "Big Box",
-    description:
-      "Made for sharing",
+    description: "Made for sharing",
   },
 ];
 
 // =========================================================
 // COUNTRY / CURRENCY
 // =========================================================
-//
-// IMPORTANT:
-//
-// Previous USA rate:
-//
-// rate: 0.012
-//
-// That effectively treated:
-//
-// $1 ≈ ₹83.33
-//
-// The updated rate:
-//
-// rate: 0.01042
-//
-// approximately treats:
-//
-// $1 ≈ ₹95.97
-//
-// This removes the roughly 15% higher USD display caused
-// by the old 0.012 conversion rate.
-//
 
 export const countries = [
   {
