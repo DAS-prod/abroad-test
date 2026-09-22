@@ -80,7 +80,23 @@ export type Bundle = {
 
   weightKg: number;
 
+  /*
+   * Examples:
+   * "250g"
+   * "500g"
+   * "1kg"
+   * "5 kg"
+   * "10 pieces"
+   */
+  sizeLabel?: string;
+
   priceInr: number;
+
+  /*
+   * Optional exact USD price from Google Sheet.
+   * Safe to keep even if some catalog rows do not use it.
+   */
+  priceUsd?: number;
 
   image: string;
 
@@ -89,6 +105,10 @@ export type Bundle = {
   tags?: string[];
 
   popular?: boolean;
+
+  active?: boolean;
+
+  stock?: number;
 
   catalogType?: CatalogType;
 };
