@@ -83,7 +83,8 @@ function readCachedCatalog(): CachedCatalog {
     const parsed = JSON.parse(raw);
 
     return {
-      products: Array.isArray(parsed?.products) ? parsed.products : [],
+      // Products must always come from the current catalog sheet, never an old tab.
+      products: [],
       bundles: Array.isArray(parsed?.bundles) ? parsed.bundles : [],
       combos: Array.isArray(parsed?.combos) ? parsed.combos : [],
     };
@@ -98,7 +99,7 @@ function writeCachedCatalog(products: Bundle[], bundles: Bundle[], combos: Bundl
   try {
     window.localStorage.setItem(
       CATALOG_CACHE_KEY,
-      JSON.stringify({ products, bundles, combos, savedAt: Date.now() })
+      JSON.stringify({ bundles, combos, savedAt: Date.now() })
     );
   } catch {
     // Storage can be unavailable in private browsers. The live catalog still works.
@@ -132,22 +133,18 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         ? (data.combos as Bundle[])
         : [];
 
-      if (incomingProducts.length > 0 || incomingBundles.length > 0 || incomingCombos.length > 0) {
+      // A successful but empty catalog is still authoritative. Other sheets
+      // may load even when the product sheet fails, so check it separately.
+      if (response.ok && data?.productSheetLoaded === true) {
         setProducts(incomingProducts);
+      } else {
+        setProducts([]);
+      }
+
+      if (response.ok && data?.source === "google-sheet") {
         setBundles(incomingBundles);
         setCombos(incomingCombos);
         writeCachedCatalog(incomingProducts, incomingBundles, incomingCombos);
-      } else if (
-        data?.source === "google-sheet" &&
-        Number(data?.sheetRows || 0) === 0
-      ) {
-        setBundles([]);
-        setCombos([]);
-      } else if (data?.source === "google-sheet") {
-        // The sheet loaded successfully but may intentionally contain only one type.
-        setProducts(incomingProducts);
-        setBundles(incomingBundles);
-        setCombos(incomingCombos);
       }
 
       setSource(
@@ -158,7 +155,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
           : "error"
       );
       setRefreshedAt(data?.refreshedAt);
-      setError(data?.error);
+      setError(data?.productSheetError || data?.error);
 
       const cached = readCachedCatalog();
       if (
@@ -171,6 +168,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data?.error || "Unable to load catalog");
       }
     } catch (err) {
+      setProducts([]);
       setSource("error");
       setError(
         err instanceof Error
@@ -185,8 +183,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cached = readCachedCatalog();
 
-    if (cached.products.length || cached.bundles.length || cached.combos.length) {
-      setProducts(cached.products);
+    if (cached.bundles.length || cached.combos.length) {
       setBundles(cached.bundles);
       setCombos(cached.combos);
       setSource("cache");
