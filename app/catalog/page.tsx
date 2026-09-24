@@ -164,7 +164,7 @@ export default function CatalogPage() {
                 ? "Try another product name or select a different category."
                 : error || "Please check back shortly for our latest collection."}
             </p>
-            {source === "error" && (
+            {(source === "error" || error) && (
               <button type="button" className="goldButton" onClick={() => void refreshCatalog()}>
                 Try Again
               </button>
