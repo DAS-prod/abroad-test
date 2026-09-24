@@ -863,6 +863,9 @@ export async function GET() {
   let loadedSheets =
     0;
 
+  let productSheetLoaded = false;
+  let productSheetError: string | undefined;
+
   /* ---------------------------
      LOAD PRODUCT CATALOG SHEET
   --------------------------- */
@@ -878,18 +881,22 @@ export async function GET() {
         );
 
       loadedSheets += 1;
+      productSheetLoaded = true;
     } catch (error) {
       console.error(
         "Product Catalog Sheet error:",
         error
       );
 
-      errors.push(
+      productSheetError =
         error instanceof Error
           ? error.message
-          : "Unable to load Product Catalog Sheet."
-      );
+          : "Unable to load Product Catalog Sheet.";
+      errors.push(productSheetError);
     }
+  } else {
+    productSheetError = "ABROAD_CATALOG_SHEET_URL is not configured.";
+    errors.push(productSheetError);
   }
 
   /* ---------------------------
@@ -1138,6 +1145,10 @@ export async function GET() {
 
       productCount:
         products.length,
+
+      productSheetLoaded,
+
+      productSheetError,
 
       comboCount:
         combos.length,
