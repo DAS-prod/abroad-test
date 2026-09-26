@@ -28,6 +28,10 @@ type BoxContextValue = {
 
   selectedBoxKg: number;
 
+  boxWeightChosen: boolean;
+
+  chooseBoxWeight: (kg: number) => void;
+
   countryCode: string;
 
   giftMode: boolean;
@@ -89,6 +93,10 @@ const SSR_BOX_FALLBACK: BoxContextValue = {
   lines: [],
 
   selectedBoxKg: 10,
+
+  boxWeightChosen: false,
+
+  chooseBoxWeight: noop,
 
   countryCode: "US",
 
@@ -159,6 +167,13 @@ export function BoxProvider({
     selectedBoxKg,
     setSelectedBoxKg,
   ] = useState(10);
+
+  const [boxWeightChosen, setBoxWeightChosen] = useState(false);
+
+  const chooseBoxWeight = (kg: number) => {
+    setSelectedBoxKg(kg);
+    setBoxWeightChosen(true);
+  };
 
   const [
     countryCode,
@@ -720,6 +735,10 @@ export function BoxProvider({
       lines,
 
       selectedBoxKg,
+
+      boxWeightChosen,
+
+      chooseBoxWeight,
 
       countryCode,
 

@@ -93,7 +93,7 @@ export default function CatalogPage() {
       <section className="productCatalogHero">
         <div className="shell productCatalogHeroInner">
           <span className="eyebrow">GODAVARI BASKET ABROAD</span>
-          <h1>Explore Our Catalog</h1>
+          <h1>Explore Our Add-ons</h1>
           <p>
             Authentic Godavari favourites, ready to become part of your custom box.
             All prices are shown in US dollars.
@@ -113,7 +113,7 @@ export default function CatalogPage() {
               placeholder="Search products"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              aria-label="Search catalog products"
+              aria-label="Search add-ons"
             />
           </label>
 
@@ -148,7 +148,7 @@ export default function CatalogPage() {
           <div className="productCatalogState">
             <span className="productCatalogSpinner" />
             <h2>Loading our Godavari collection…</h2>
-            <p>Bringing the latest catalog directly from our live product sheet.</p>
+            <p>Bringing the latest add-ons directly from our live product sheet.</p>
           </div>
         ) : visibleProducts.length > 0 ? (
           <div className="productCatalogGrid">
@@ -158,13 +158,13 @@ export default function CatalogPage() {
           </div>
         ) : (
           <div className="productCatalogState">
-            <h2>{query ? "No matching products" : "Catalog is being updated"}</h2>
+            <h2>{query ? "No matching products" : "Add-ons are being updated"}</h2>
             <p>
               {query
                 ? "Try another product name or select a different category."
                 : error || "Please check back shortly for our latest collection."}
             </p>
-            {(source === "error" || error) && (
+            {source === "error" && (
               <button type="button" className="goldButton" onClick={() => void refreshCatalog()}>
                 Try Again
               </button>
