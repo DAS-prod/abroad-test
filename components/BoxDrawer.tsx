@@ -11,10 +11,8 @@ export default function BoxDrawer() {
     lines,
     drawerOpen,
     setDrawerOpen,
-    totalProductWeight,
     totalWeight,
     totalInr,
-    transportUsd,
     selectedBoxKg,
     minimumReached,
     remainingToMinimum,
@@ -200,9 +198,9 @@ export default function BoxDrawer() {
           {lines.length > 0 && (
             <div className="totalLine">
               <span>
-                Transport · {Math.max(5, Math.ceil(totalProductWeight))} kg billable
+                Transport
               </span>
-              <strong>${transportUsd}</strong>
+              <strong>Confirmed on WhatsApp</strong>
             </div>
           )}
 
