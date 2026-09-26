@@ -1,40 +1,6 @@
 export const PACKAGING_WEIGHT_KG = 0.3;
 
 // =========================================================
-// TRANSPORT
-// =========================================================
-
-// 5 kg = $29
-// Each additional started kg = +$6
-// Packaging weight is NOT included in transport calculation.
-
-export const TRANSPORT_BASE_WEIGHT_KG = 5;
-export const TRANSPORT_BASE_USD = 29;
-export const TRANSPORT_EXTRA_USD_PER_KG = 6;
-
-export function calculateTransportUsd(
-  productWeightKg: number
-) {
-  if (productWeightKg <= 0) {
-    return 0;
-  }
-
-  const billableWeight = Math.max(
-    TRANSPORT_BASE_WEIGHT_KG,
-    Math.ceil(productWeightKg - 0.000001)
-  );
-
-  return (
-    TRANSPORT_BASE_USD +
-    Math.max(
-      0,
-      billableWeight - TRANSPORT_BASE_WEIGHT_KG
-    ) *
-      TRANSPORT_EXTRA_USD_PER_KG
-  );
-}
-
-// =========================================================
 // CATEGORIES
 // =========================================================
 
