@@ -2,7 +2,6 @@
 
 import {
   Bundle,
-  calculateTransportUsd,
   countries,
   PACKAGING_WEIGHT_KG,
 } from "@/data/catalog";
@@ -48,7 +47,6 @@ type BoxContextValue = {
 
   totalInr: number;
 
-  transportUsd: number;
 
   itemCount: number;
 
@@ -114,7 +112,6 @@ const SSR_BOX_FALLBACK: BoxContextValue = {
 
   totalInr: 0,
 
-  transportUsd: 0,
 
   itemCount: 0,
 
@@ -457,38 +454,6 @@ export function BoxProvider({
       allCatalogItems,
     ]);
 
-  /*
-   * TRANSPORT RULE
-   *
-   * 5KG  = $29
-   * 6KG  = $35
-   * 7KG  = $41
-   * 8KG  = $47
-   * 9KG  = $53
-   * 10KG = $59
-   *
-   * Every extra started KG
-   * after 5KG = +$6.
-   *
-   * Important:
-   * shipping uses product weight,
-   * NOT packaging weight.
-   *
-   * Therefore a real 5KG combo
-   * remains $29 even if packaging
-   * makes displayed total 5.3KG.
-   */
-  const transportUsd =
-    useMemo(
-      () =>
-        calculateTransportUsd(
-          totalProductWeight
-        ),
-      [
-        totalProductWeight,
-      ]
-    );
-
   const itemCount =
     lines.reduce(
       (
@@ -756,7 +721,6 @@ export function BoxProvider({
 
       totalInr,
 
-      transportUsd,
 
       itemCount,
 
